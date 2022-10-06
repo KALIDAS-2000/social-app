@@ -14,11 +14,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path,include
 from api import views
 from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken.views import obtain_auth_token
 router=DefaultRouter()
+from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView
+from ekart import urls
 
 router.register("posts",views.PostViews,basename="posts")
 router.register("accounts/signup",views.UsersView,basename="users")
@@ -26,7 +28,9 @@ router.register('api/v2/posts',views.PostModelView,basename="mposts")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('token/',obtain_auth_token),
+    path('token/',TokenObtainPairView.as_view()),
+    path('token/refresh/',TokenRefreshView.as_view()),
+    path('ekart/',include('ekart.urls'))
 ]+router.urls
 
 
